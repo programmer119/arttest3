@@ -1,7 +1,11 @@
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Canvas, useFrame, useThree  } from '@react-three/fiber';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from '@mui/material';
-import { LeftMiddle } from './layout/styles'
+import { LeftMiddle } from './layout/styles';
+import { useControls } from "leva"
+// import { useLocation } from 'react-router';
+import { useSearchParams } from 'react-router-dom'
+import QueryString from 'qs';
 import {
   Html,
   ContactShadows,
@@ -16,7 +20,8 @@ import {
   AccumulativeShadows,
   RandomizedLight,
   OrthographicCamera,
-  Plane
+  Plane,
+  PivotControls
 } from '@react-three/drei';
 import {
   CustomOrbit,
@@ -31,6 +36,7 @@ import { CustomGeometrys } from './CustomGeometrys';
 
 import * as CustomUtil from './CustomUtil';
 import { CameraHelper } from 'three';
+import Grass from '../grass/Grass'
 
 function Loader() {
   // const { progress } = useProgress()
@@ -46,6 +52,24 @@ function CustomCanvas(props) {
   //   console.log("DELTA : " + delta);
   // })
 
+  // const { horseScale } = useControls('3D Object',{
+  //   horseScale: { value : 12.0, min : 1, max : 100}
+  // });
+  const { usehorseTransform } = useControls('3D Object',{
+    usehorseTransform: { value: false },
+  })
+
+  // const location = useLocation(); 
+  // const queryData = QueryString.parse(location.search, {
+  //    ignoreQueryPrefix: true,
+  //   });
+  //console.log(queryData);  
+  //const [searchParams, setSearchParams] = useSearchParams();
+  const search = window.location.search;
+  const params = new URLSearchParams(search);
+  const page = params.get('page');
+  const horse = params.get('horse');
+  // console.log("params : " + new URLSearchParams(search) ) ;
   return (
     <div
     id="canvas-container"
@@ -70,18 +94,34 @@ function CustomCanvas(props) {
             perfSucks={perfSucks} 
             file={props.file}
             heightparent={height}
+            page={page}
           />        
           <CustomLight perfSucks={perfSucks}></CustomLight>        
+
+          {
+            usehorseTransform ?
+          <PivotControls activeAxes={[true, false, true]} rotation={[0, Math.PI / 2, 0]} scale={50} anchor={[0, 0, 0]}>
+            <CustomGeometrys
+              texture = {props.texture}
+              horseShape={props.horseShape}
+              sethorseShape={props.sethorseShape}
+              defaulthorseShape={props.defaulthorseShape}
+            />
+          </PivotControls>    
+          :
           <CustomGeometrys
-            texture = {props.texture}
-            horseShape={props.horseShape}
-            sethorseShape={props.sethorseShape}
-            defaulthorseShape={props.defaulthorseShape}
-          />
+          texture = {props.texture}
+          horseShape={props.horseShape}
+          sethorseShape={props.sethorseShape}
+          defaulthorseShape={props.defaulthorseShape}
+          horse={horse}
+        />
+          }
 
           <Plane receiveShadow position={[-15.5, 0.5, -100]} rotation-x={-Math.PI / 2} args={[1500, 1500]}>
             <shadowMaterial opacity={0.65} />
           </Plane>          
+          {/* <Grass/> */}
           
         </Suspense>        
         <CustomOrbit/>

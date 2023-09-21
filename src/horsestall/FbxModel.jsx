@@ -10,7 +10,8 @@ import {
   Lightformer,
   Environment,
   Float,
-  SoftShadows
+  SoftShadows,
+  PivotControls,
 } from '@react-three/drei'
 import { useControls } from "leva"
 import React, { useState, useEffect, useRef } from 'react'
@@ -30,7 +31,7 @@ var occulusionMap;
 function LoadTextures(textureindex)
 {
   var loader = new THREE.TextureLoader();
-  textures = loader.load(`/arttest3/horsestall/texture/real_horse_dif0${textureindex}.png`);
+  textures = loader.load(`/arttest3/horsestall/texture/${textureindex}.png`);
   // roughnessMap = loader.load(`/horsestall/texture/real_horse_roughness.png`);
   // roughnessMap.minFilter = THREE.LinearFilter;
   // roughnessMap.magFilter = THREE.LinearFilter;
@@ -64,7 +65,7 @@ function FbxRender (props) {
     // })
 
     const { horseScale } = useControls('3D Object',{
-      horseScale: { value : 15.0, min : 1, max : 100}
+      horseScale: { value : 12.0, min : 1, max : 100}
     });
 
     const boxRef = useRef();
@@ -89,7 +90,7 @@ function FbxRender (props) {
     // materials.real_horse_dif01.normalScale.set(2.5, 2.5)
     // materials.real_horse_dif01.normalScale.set(2.5, 2.5)
 
-    var texind = props.texture;
+    var texind = props.horse;//props.texture;
     // materials.real_horse_dif01.color = new THREE.Color("#f00");//.convertSRGBToLinear();
     copyMaterials = materials.real_horse_dif01.clone();    
     LoadTextures(texind);
@@ -97,7 +98,7 @@ function FbxRender (props) {
     
 
     useEffect(()=>{
-      console.log(`FbxRender TEXTURE : ${props.texture}`);      
+      console.log(`FbxRender TEXTURE : ${texind}`);      
 
       for(var i = 0; i < aninames.length; ++i)
       {
@@ -130,7 +131,7 @@ function FbxRender (props) {
       <group>        
         <group ref={group} {...props} dispose={null}>                  
           <group>                
-            <group name="HorseExport" rotation={[0, Math.PI / 2-0.8 - 0.7, 0]} position={[0,0,0]} scale={horseScale}>              
+            <group name="HorseExport" rotation={[0, Math.PI / 2-0.8 - 0.7, 0]} position={[-0,0,0]} scale={horseScale}>              
                 <group name="real_horse_body01">                
                   <group
                     name="Bip001"

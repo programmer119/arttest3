@@ -18,8 +18,10 @@ export function CustomGeometrys(props)
 
     return (
         <group>          
+          
           <FbxRender
             texture ={props.texture}
+            horse={props.horse}
           >            
           </FbxRender>        
           {/* <ShadowRender></ShadowRender> */}
