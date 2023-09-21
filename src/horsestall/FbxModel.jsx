@@ -17,6 +17,7 @@ import { useControls } from "leva"
 import React, { useState, useEffect, useRef } from 'react'
 import * as THREE from "three";
 import {useFrame} from  "@react-three/fiber"
+import * as config from '../../src/config';
 // import { 
 //   LayerMaterial, 
 //   Color, 
@@ -64,8 +65,13 @@ function FbxRender (props) {
     //   size: { value: 1, min : -1, max : 1 }
     // })
 
+    var texind = props.horse;//props.texture;
+    var page = props.page;
+
+    // console.log('hs : ' + config.settings[page].horseScale );
+
     const { horseScale } = useControls('3D Object',{
-      horseScale: { value : 12.0, min : 1, max : 100}
+      horseScale: { value : config.settings[page].horseScale, min : 1, max : 100}
     });
 
     const boxRef = useRef();
@@ -90,7 +96,6 @@ function FbxRender (props) {
     // materials.real_horse_dif01.normalScale.set(2.5, 2.5)
     // materials.real_horse_dif01.normalScale.set(2.5, 2.5)
 
-    var texind = props.horse;//props.texture;
     // materials.real_horse_dif01.color = new THREE.Color("#f00");//.convertSRGBToLinear();
     copyMaterials = materials.real_horse_dif01.clone();    
     LoadTextures(texind);
@@ -131,8 +136,11 @@ function FbxRender (props) {
       <group>        
         <group ref={group} {...props} dispose={null}>                  
           <group>                
-            <group name="HorseExport" rotation={[0, Math.PI / 2-0.8 - 0.7, 0]} position={[-0,0,0]} scale={horseScale}>              
-                <group name="real_horse_body01">                
+            <group name="HorseExport" 
+            rotation={config.settings[page].horserotation} 
+            position={config.settings[page].horseposition} 
+            scale={horseScale}>
+                <group name="real_horse_body01">
                   <group
                     name="Bip001"
                     position={[0, 1.065, -0.363]}

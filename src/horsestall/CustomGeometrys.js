@@ -22,6 +22,7 @@ export function CustomGeometrys(props)
           <FbxRender
             texture ={props.texture}
             horse={props.horse}
+            page={props.page}
           >            
           </FbxRender>        
           {/* <ShadowRender></ShadowRender> */}

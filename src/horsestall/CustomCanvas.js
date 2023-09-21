@@ -48,6 +48,8 @@ function CustomCanvas(props) {
   const [perfSucks, degrade] = useState(false);
   const isDesktop = useMediaQuery('(min-width:1024px)');
   const [height, setheight] = useState(25);
+
+
   // useFrame((delta)=>{
   //   console.log("DELTA : " + delta);
   // })
@@ -55,9 +57,9 @@ function CustomCanvas(props) {
   // const { horseScale } = useControls('3D Object',{
   //   horseScale: { value : 12.0, min : 1, max : 100}
   // });
-  const { usehorseTransform } = useControls('3D Object',{
-    usehorseTransform: { value: false },
-  })
+  // const { usehorseTransform } = useControls('3D Object',{
+  //   usehorseTransform: { value: false },
+  // })
 
   // const location = useLocation(); 
   // const queryData = QueryString.parse(location.search, {
@@ -69,7 +71,8 @@ function CustomCanvas(props) {
   const params = new URLSearchParams(search);
   const page = params.get('page');
   const horse = params.get('horse');
-  // console.log("params : " + new URLSearchParams(search) ) ;
+  // console.log("params : " + new URLSearchParams(search) ) ;  
+
   return (
     <div
     id="canvas-container"
@@ -96,25 +99,31 @@ function CustomCanvas(props) {
             heightparent={height}
             page={page}
           />        
-          <CustomLight perfSucks={perfSucks}></CustomLight>        
+          <CustomLight 
+          perfSucks={perfSucks}
+          horse={horse}
+          page={page}          
+          >
+            </CustomLight>        
 
           {
-            usehorseTransform ?
-          <PivotControls activeAxes={[true, false, true]} rotation={[0, Math.PI / 2, 0]} scale={50} anchor={[0, 0, 0]}>
-            <CustomGeometrys
-              texture = {props.texture}
-              horseShape={props.horseShape}
-              sethorseShape={props.sethorseShape}
-              defaulthorseShape={props.defaulthorseShape}
-            />
-          </PivotControls>    
-          :
+          //   usehorseTransform ?
+          //  <PivotControls activeAxes={[true, false, true]} rotation={[0, Math.PI / 2, 0]} scale={50} anchor={[0, 0, 0]}>
+          //   <CustomGeometrys
+          //     texture = {props.texture}
+          //     horseShape={props.horseShape}
+          //     sethorseShape={props.sethorseShape}
+          //     defaulthorseShape={props.defaulthorseShape}
+          //   />
+          //  </PivotControls>    
+          // :
           <CustomGeometrys
           texture = {props.texture}
           horseShape={props.horseShape}
           sethorseShape={props.sethorseShape}
           defaulthorseShape={props.defaulthorseShape}
           horse={horse}
+          page={page}
         />
           }
 

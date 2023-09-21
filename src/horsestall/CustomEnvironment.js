@@ -1,3 +1,4 @@
+import * as config from '../../src/config';
 import { Sprite } from 'three';
 import { Geometry, Base, Subtraction, Addition } from '@react-three/csg'
 import { useControls } from 'leva'
@@ -33,14 +34,18 @@ import { proxy, useSnapshot } from 'valtio'
 // } from '@react-three/postprocessing'
 // import { Direction } from "react-toastify/dist/utils";
 
-export function CustomLight(perfSucks) {
+export function CustomLight(props) {
   return (
     <group>      
-      <CustomShadowLight></CustomShadowLight>
+      <CustomShadowLight
+          horse={props.horse}
+          page={props.page}         
+      ></CustomShadowLight>
       <CustomAmbientLight></CustomAmbientLight>
-      {/* <CustomSpotLight></CustomSpotLight> */}
-      <CustomDirectionLight></CustomDirectionLight>
-      {/* <CustomAmbientLight></CustomAmbientLight> */}
+      <CustomDirectionLight
+          horse={props.horse}
+          page={props.page}   
+      ></CustomDirectionLight>
     </group>
   );
 }
@@ -146,14 +151,15 @@ export function CustomPointLight() {
   );
 }
 
-export function CustomShadowLight(){
+export function CustomShadowLight(props){
   //-24, 34, -12
-  const shadowResolution = 0.5;
+  // const shadowResolution = 0.5;
   return (
     <spotLight 
       angle={0.5} 
       castShadow 
-      position={[-240*shadowResolution, 340*shadowResolution, -120*shadowResolution]} 
+      position={config.settings[props.page].shadowlightPosition}
+      //position={[-120*shadowResolution, 170*shadowResolution, -60*shadowResolution]} 
       intensity={0} 
       shadow-mapSize={[515, 512]} />
   )
@@ -248,7 +254,7 @@ const FromToTargetAngle=(from, target)=>
   return angle;
 }
 
-function CustomDirectionLight() {
+function CustomDirectionLight(props) {
   const fromRef = useRef(null);
   const targetRef = useRef(null);
   const dirLightRef = useRef(null);
@@ -270,7 +276,7 @@ function CustomDirectionLight() {
   //  },[fromRef.current.position])
 
   const { lightPosition } = useControls('LIGHT',{
-    lightPosition: { value: [-24, 34, -12] },
+    lightPosition: { value: config.settings[props.page].lightPosition },
   })
 
   if(fromRef.current)
